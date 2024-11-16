@@ -35,8 +35,8 @@ export const database: Database = {
   async text(name: string, key: string) {
     // If you don't want to use the text records I mentioned like an avatar, just return empty here too
     try {
-      console.log(name);
-      console.log(key);
+      console.log("name: ",name);
+      console.log("key: ",key);
       const nameData: NameData = await fetchOffchainName(name);
       const value = nameData?.text?.[key] || '';
       return { value, ttl: 1000 };
@@ -56,8 +56,13 @@ async function fetchOffchainName(name: string): Promise<NameData> {
     // const response = await fetch(
     //   `https://ens-gateway.gregskril.workers.dev/get/${name}`
     // );
-    const response = await redis.get<string>(encodeURI(name));
-    console.log(name);
+    const subdomain = extractSubdomain(name)
+
+    let response;
+    if(subdomain){
+       response = await redis.get<string>(encodeURI(subdomain));
+    }
+    //console.log(name);
     console.log("response: ",response);
 
     const data = response as NameData;
@@ -66,4 +71,13 @@ async function fetchOffchainName(name: string): Promise<NameData> {
     console.error('Error fetching offchain name', err);
     return {};
   }
+
+  function extractSubdomain(domain: string): string | null {
+    const pattern = /^(.*?)\.testbuild\.eth$/; // Regex to match "anything.testbuild.eth"
+    const match = domain.match(pattern);
+    if (match && match[1]) {
+        return match[1]; // Return the part before "testbuild"
+    }
+    return null; // Return null if no match is found
+}
 }
