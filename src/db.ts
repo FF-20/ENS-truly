@@ -58,6 +58,7 @@ async function fetchOffchainName(name: string): Promise<NameData> {
     //   `https://ens-gateway.gregskril.workers.dev/get/${name}`
     // );
     const response = await redis.get<NameData>(name);
+    console.log("response: ",response);
 
     const data = response as NameData;
     return data;
