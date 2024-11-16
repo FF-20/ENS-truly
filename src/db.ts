@@ -9,7 +9,6 @@ interface NameData {
 }
 
 
-
 // Initialize Upstash Redis client
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -57,7 +56,8 @@ async function fetchOffchainName(name: string): Promise<NameData> {
     // const response = await fetch(
     //   `https://ens-gateway.gregskril.workers.dev/get/${name}`
     // );
-    const response = await redis.get<NameData>(name);
+    const response = await redis.get<string>(name);
+    console.log(name);
     console.log("response: ",response);
 
     const data = response as NameData;
