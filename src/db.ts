@@ -8,6 +8,8 @@ interface NameData {
   contenthash?: string;
 }
 
+
+
 // Initialize Upstash Redis client
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -34,6 +36,8 @@ export const database: Database = {
   async text(name: string, key: string) {
     // If you don't want to use the text records I mentioned like an avatar, just return empty here too
     try {
+      console.log(name);
+      console.log(key);
       const nameData: NameData = await fetchOffchainName(name);
       const value = nameData?.text?.[key] || '';
       return { value, ttl: 1000 };
