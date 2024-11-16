@@ -61,6 +61,7 @@
     "@chainlink/ethers-ccip-read-provider": "^0.2.3",
     "@ensdomains/ens-contracts": "^0.0.8",
     "@ensdomains/offchain-resolver-contracts": "^0.2.1",
+    "@upstash/redis": "^1.34.3",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2"
   }

@@ -1,4 +1,5 @@
 import { Database } from './server';
+import { Redis } from "@upstash/redis/cloudflare";
 import { EMPTY_CONTENT_HASH, ETH_COIN_TYPE, ZERO_ADDRESS } from './utils';
 
 interface NameData {
@@ -6,6 +7,12 @@ interface NameData {
   text?: { [key: string]: string };
   contenthash?: string;
 }
+
+// Initialize Upstash Redis client
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 export const database: Database = {
   async addr(name, coinType) {
@@ -43,11 +50,12 @@ export const database: Database = {
 
 async function fetchOffchainName(name: string): Promise<NameData> {
   try {
-    const response = await fetch(
-      `https://ens-gateway.gregskril.workers.dev/get/${name}`
-    );
+    // const response = await fetch(
+    //   `https://ens-gateway.gregskril.workers.dev/get/${name}`
+    // );
+    const response = await redis.get<NameData>(name);
 
-    const data = (await response.json()) as NameData;
+    const data = response as NameData;
     return data;
   } catch (err) {
     console.error('Error fetching offchain name', err);

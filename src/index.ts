@@ -11,6 +11,7 @@ if (!privateKey) {
 }
 
 const address = ethers.utils.computeAddress(privateKey);
+console.log(address);
 const signer = new ethers.utils.SigningKey(privateKey);
 const app = makeApp(signer, '/', database);
 console.log(`Serving on port ${port} with signing address ${address}`);
